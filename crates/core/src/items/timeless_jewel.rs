@@ -149,39 +149,3 @@ impl AnalyzableItem for TimelessJewel {
         &self.raw_data
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_jewel_type_as_str() {
-        assert_eq!(JewelType::LethalPride.as_str(), "Lethal Pride");
-        assert_eq!(JewelType::BrutalRestraint.as_str(), "Brutal Restraint");
-    }
-
-    #[test]
-    fn test_jewel_type_from_str() {
-        assert_eq!(
-            JewelType::from_str("Lethal Pride"),
-            Some(JewelType::LethalPride)
-        );
-        assert_eq!(JewelType::from_str("Unknown"), None);
-    }
-
-    #[test]
-    fn test_timeless_jewel_creation() {
-        let jewel = TimelessJewel::new(
-            "test-id".to_string(),
-            JewelType::LethalPride,
-            12345,
-            "Kaom".to_string(),
-            Value::Null,
-        );
-
-        assert_eq!(jewel.id(), "test-id");
-        assert_eq!(jewel.item_type(), "Lethal Pride");
-        assert_eq!(jewel.seed(), 12345);
-        assert_eq!(jewel.conqueror(), "Kaom");
-    }
-}

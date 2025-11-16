@@ -11,4 +11,7 @@ pub mod sources;
 pub mod downloader;
 pub mod error;
 
+#[cfg(test)]
+mod tests;
+
 pub use error::{ApiError, DownloadError, SourceError};

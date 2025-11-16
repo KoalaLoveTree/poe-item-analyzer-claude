@@ -114,23 +114,3 @@ impl Analyzer<TimelessJewel> for TimelessJewelAnalyzer {
             .unwrap_or(Ordering::Equal)
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_config_creation() {
-        let mut config = TimelessJewelConfig::new();
-        config.add_mod("Double Damage".to_string(), 5.0);
-        config.add_mod("Onslaught".to_string(), 4.5);
-
-        assert_eq!(config.valuable_mods().len(), 2);
-        assert_eq!(config.valuable_mods().get("Double Damage"), Some(&5.0));
-    }
-
-    #[test]
-    fn test_analyzer_creation() {
-        let _analyzer = TimelessJewelAnalyzer::new();
-    }
-}

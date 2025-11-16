@@ -43,16 +43,3 @@ impl DataDownloader {
         Ok(())
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_downloader_creation() {
-        let _downloader = DataDownloader::new(
-            "https://example.com/manifest.json".to_string(),
-            PathBuf::from("/tmp/data"),
-        );
-    }
-}
