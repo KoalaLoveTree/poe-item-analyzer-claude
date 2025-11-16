@@ -1,80 +1,122 @@
 {
-  "data_version": "0.1.0",
-  "poe_league": "TBD",
+  "data_version": "pob-unknown",
+  "poe_league": "Current",
   "last_updated": "2025-11-16T00:00:00Z",
-  "source": "https://github.com/Regisle/TimelessJewelData",
+  "source": {
+    "type": "github",
+    "repo": "PathOfBuildingCommunity/PathOfBuilding",
+    "branch": "master",
+    "path": "src/Data/TimelessJewelData",
+    "url": "https://github.com/PathOfBuildingCommunity/PathOfBuilding"
+  },
   "files": [
     {
-      "name": "lethal_pride.bin",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/lethal_pride.bin",
+      "name": "LethalPride.zip",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/LethalPride.zip",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Lethal Pride timeless jewel data"
+      "description": "Lethal Pride timeless jewel seed data"
     },
     {
-      "name": "brutal_restraint.bin",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/brutal_restraint.bin",
+      "name": "BrutalRestraint.zip",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/BrutalRestraint.zip",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Brutal Restraint timeless jewel data"
+      "description": "Brutal Restraint timeless jewel seed data"
     },
     {
-      "name": "glorious_vanity.bin",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/glorious_vanity.bin",
+      "name": "ElegantHubris.zip",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/ElegantHubris.zip",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Glorious Vanity timeless jewel data"
+      "description": "Elegant Hubris timeless jewel seed data"
     },
     {
-      "name": "elegant_hubris.bin",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/elegant_hubris.bin",
+      "name": "MilitantFaith.zip",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/MilitantFaith.zip",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Elegant Hubris timeless jewel data"
+      "description": "Militant Faith timeless jewel seed data"
     },
     {
-      "name": "militant_faith.bin",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/militant_faith.bin",
+      "name": "GloriousVanity.zip.part0",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/GloriousVanity.zip.part0",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Militant Faith timeless jewel data"
+      "description": "Glorious Vanity data (part 1/5)"
     },
     {
-      "name": "Node_Indices.csv",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/Node_Indices.csv",
+      "name": "GloriousVanity.zip.part1",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/GloriousVanity.zip.part1",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Passive tree node ID mappings"
+      "description": "Glorious Vanity data (part 2/5)"
     },
     {
-      "name": "Jewel_Node_Link.json",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/Jewel_Node_Link.json",
+      "name": "GloriousVanity.zip.part2",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/GloriousVanity.zip.part2",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Socket to node range mappings"
+      "description": "Glorious Vanity data (part 3/5)"
     },
     {
-      "name": "alternate_passive_additions.json",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/alternate_passive_additions.json",
+      "name": "GloriousVanity.zip.part3",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/GloriousVanity.zip.part3",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Mod definitions for timeless jewels"
+      "description": "Glorious Vanity data (part 4/5)"
     },
     {
-      "name": "alternate_passive_skills.json",
-      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/alternate_passive_skills.json",
+      "name": "GloriousVanity.zip.part4",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/GloriousVanity.zip.part4",
       "sha256": "",
+      "github_sha": "",
       "size": 0,
       "required": true,
-      "description": "Replacement passive skill definitions"
+      "description": "Glorious Vanity data (part 5/5)"
+    },
+    {
+      "name": "NodeIndexMapping.lua",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/NodeIndexMapping.lua",
+      "sha256": "",
+      "github_sha": "",
+      "size": 0,
+      "required": true,
+      "description": "Passive tree node ID to index mappings"
+    },
+    {
+      "name": "LegionPassives.lua",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/LegionPassives.lua",
+      "sha256": "",
+      "github_sha": "",
+      "size": 0,
+      "required": true,
+      "description": "Timeless jewel passive and mod definitions"
+    },
+    {
+      "name": "LegionTradeIds.lua",
+      "url": "https://raw.githubusercontent.com/PathOfBuildingCommunity/PathOfBuilding/master/src/Data/TimelessJewelData/LegionTradeIds.lua",
+      "sha256": "",
+      "github_sha": "",
+      "size": 0,
+      "required": false,
+      "description": "Trade API identifiers (optional)"
     }
   ]
 }

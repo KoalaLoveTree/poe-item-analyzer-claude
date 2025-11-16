@@ -9,9 +9,13 @@
 pub mod poe_api;
 pub mod sources;
 pub mod downloader;
+pub mod manifest;
+pub mod github;
 pub mod error;
 
 #[cfg(test)]
 mod tests;
 
 pub use error::{ApiError, DownloadError, SourceError};
+pub use manifest::{DataFile, DataManifest, DataSource};
+pub use github::GitHubClient;
