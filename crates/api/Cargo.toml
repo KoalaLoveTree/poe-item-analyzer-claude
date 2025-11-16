@@ -1,0 +1,24 @@
+[package]
+name = "poe-item-analyzer-api"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Internal dependencies
+poe-item-analyzer-core = { path = "../core" }
+
+# External dependencies
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+async-trait.workspace = true
+reqwest.workspace = true
+sha2.workspace = true
+dirs.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util"] }

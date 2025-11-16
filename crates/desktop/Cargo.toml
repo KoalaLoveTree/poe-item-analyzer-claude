@@ -1,0 +1,24 @@
+[package]
+name = "poe-item-analyzer-desktop"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "poe-item-analyzer"
+path = "src/main.rs"
+
+[dependencies]
+# Internal dependencies
+poe-item-analyzer-core = { path = "../core" }
+poe-item-analyzer-api = { path = "../api" }
+
+# External dependencies
+eframe.workspace = true
+egui.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+dirs.workspace = true

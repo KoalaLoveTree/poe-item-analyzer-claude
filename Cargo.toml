@@ -1,0 +1,44 @@
+[workspace]
+members = [
+    "crates/core",
+    "crates/api",
+    "crates/desktop",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["PoE Item Analyzer Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/KoalaLoveTree/poe-item-analyzer-claude"
+
+[workspace.dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Async runtime
+tokio = { version = "1.0", features = ["full"] }
+async-trait = "0.1"
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json"] }
+
+# GUI
+eframe = "0.27"
+egui = "0.27"
+
+# Utilities
+dirs = "5.0"
+sha2 = "0.10"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

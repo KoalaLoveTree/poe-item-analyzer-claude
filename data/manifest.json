@@ -1,0 +1,80 @@
+{
+  "data_version": "0.1.0",
+  "poe_league": "TBD",
+  "last_updated": "2025-11-16T00:00:00Z",
+  "source": "https://github.com/Regisle/TimelessJewelData",
+  "files": [
+    {
+      "name": "lethal_pride.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/lethal_pride.bin",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Lethal Pride timeless jewel data"
+    },
+    {
+      "name": "brutal_restraint.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/brutal_restraint.bin",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Brutal Restraint timeless jewel data"
+    },
+    {
+      "name": "glorious_vanity.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/glorious_vanity.bin",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Glorious Vanity timeless jewel data"
+    },
+    {
+      "name": "elegant_hubris.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/elegant_hubris.bin",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Elegant Hubris timeless jewel data"
+    },
+    {
+      "name": "militant_faith.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/militant_faith.bin",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Militant Faith timeless jewel data"
+    },
+    {
+      "name": "Node_Indices.csv",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/Node_Indices.csv",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Passive tree node ID mappings"
+    },
+    {
+      "name": "Jewel_Node_Link.json",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/Jewel_Node_Link.json",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Socket to node range mappings"
+    },
+    {
+      "name": "alternate_passive_additions.json",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/alternate_passive_additions.json",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Mod definitions for timeless jewels"
+    },
+    {
+      "name": "alternate_passive_skills.json",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/alternate_passive_skills.json",
+      "sha256": "",
+      "size": 0,
+      "required": true,
+      "description": "Replacement passive skill definitions"
+    }
+  ]
+}

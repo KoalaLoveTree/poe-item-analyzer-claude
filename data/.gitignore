@@ -1,0 +1,11 @@
+# Ignore all data files
+*.bin
+*.dat
+*.csv
+*.json
+
+# Except the manifest
+!manifest.json
+
+# Except the README
+!README.md
