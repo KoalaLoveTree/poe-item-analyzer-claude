@@ -3,7 +3,7 @@
 use crate::error::DownloadError;
 use sha2::{Digest, Sha256};
 use std::fs::File;
-use std::io::{self, Read};
+use std::io::Read;
 use std::path::Path;
 
 /// Calculate SHA256 checksum of a file

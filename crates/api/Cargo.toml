@@ -20,6 +20,8 @@ reqwest.workspace = true
 sha2.workspace = true
 dirs.workspace = true
 chrono = "0.4"
+mlua = { version = "0.9", features = ["lua54", "serialize"] }
+zip = "0.6"
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["test-util"] }
