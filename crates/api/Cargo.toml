@@ -19,6 +19,8 @@ async-trait.workspace = true
 reqwest.workspace = true
 sha2.workspace = true
 dirs.workspace = true
+chrono = "0.4"
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["test-util"] }
+tempfile = "3.0"
