@@ -359,11 +359,233 @@ The service layer:
 - Reference the C# examples in the repo for parsing logic
 - Load ALL socket locations for comprehensive analysis
 
+### Data Management System
+
+**IMPORTANT:** LUT data files are large (~200 MB) and must NOT be committed to the repository.
+
+#### Architecture
+
+**Storage Location (Cross-Platform):**
+Using Rust's `dirs` crate for proper OS-specific paths:
+```
+Linux:   ~/.local/share/poe-item-analyzer-claude/data/
+Windows: C:\Users\<user>\AppData\Roaming\poe-item-analyzer-claude\data\
+macOS:   ~/Library/Application Support/poe-item-analyzer-claude/data/
+```
+
+**Repository Structure:**
+```
+/data/
+├── .gitignore           # Ignore all data files (*.bin, *.dat, *.json, *.csv)
+├── README.md            # Manual download instructions
+└── manifest.json        # Data file metadata and download URLs
+```
+
+**manifest.json Format:**
+```json
+{
+  "data_version": "3.27.0",
+  "poe_league": "Keepers of the Flame",
+  "last_updated": "2025-11-10T12:00:00Z",
+  "source": "https://github.com/Regisle/TimelessJewelData",
+  "files": [
+    {
+      "name": "lethal_pride.bin",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/lethal_pride.bin",
+      "sha256": "...",
+      "size": 45000000,
+      "required": true
+    },
+    {
+      "name": "Node_Indices.csv",
+      "url": "https://raw.githubusercontent.com/Regisle/TimelessJewelData/master/data/Node_Indices.csv",
+      "sha256": "...",
+      "size": 125000,
+      "required": true
+    }
+  ]
+}
+```
+
+#### Download & Update UI
+
+**First-Run Detection:**
+- On startup, check if required data files exist
+- If missing → show "Data Download Required" dialog
+- If present → verify integrity (optional checksum validation)
+
+**Download Dialog:**
+```
+┌─────────────────────────────────────────────┐
+│ Data Download Required            [X]       │
+├─────────────────────────────────────────────┤
+│ This app needs timeless jewel data          │
+│ to analyze items (~200 MB download)         │
+│                                             │
+│ Source: github.com/Regisle/...              │
+│                                             │
+│ [ Download & Install Data ]                 │
+│                                             │
+│ Progress: [████████░░░░] 45%                │
+│ Downloading: lethal_pride.bin (45/200 MB)  │
+│                                             │
+│ Or import manually: [ Browse Local Files ]  │
+└─────────────────────────────────────────────┘
+```
+
+**Settings/Data Management UI:**
+```
+┌─────────────────────────────────────────────┐
+│ Settings → Data Management                  │
+├─────────────────────────────────────────────┤
+│                                             │
+│ TIMELESS JEWEL DATA                         │
+│ ┌─────────────────────────────────────────┐ │
+│ │ Status: ✅ Installed (v3.27.0)          │ │
+│ │ League: Keepers of the Flame            │ │
+│ │ Last updated: 2025-11-10                │ │
+│ │ Size: 187 MB                            │ │
+│ │ Location: ~/.local/share/poe-item-...  │ │
+│ │                                         │ │
+│ │ [ Check for Updates ]  [ Re-import ]    │ │
+│ └─────────────────────────────────────────┘ │
+│                                             │
+│ IMPORT SOURCE:                              │
+│ ○ GitHub (automatic, recommended)           │
+│   Repository: Regisle/TimelessJewelData     │
+│                                             │
+│ ○ Custom URL                                │
+│   [_________________________________]       │
+│                                             │
+│ ○ Local Files                               │
+│   [Browse...] Select data directory or ZIP  │
+│                                             │
+│ [ Import Now ]                              │
+└─────────────────────────────────────────────┘
+```
+
+#### Features
+
+**Initial Download:**
+- One-click download from GitHub
+- Progress bar showing download status
+- Validates checksums (SHA256) after download
+- Extracts to proper OS-specific location
+- Fallback to manual import if download fails
+
+**Update Management:**
+- "Check for Updates" compares local version with remote manifest
+- Shows changelog/what's new (if available)
+- Re-download updated files only
+- Keeps old version as backup during update
+
+**Re-import Options:**
+1. **From GitHub** (default):
+   - Automatically fetches latest data from official repo
+   - Validates file integrity
+   - Best for most users
+
+2. **Custom URL**:
+   - For community mirrors
+   - For league-specific data sources
+   - Advanced users only
+
+3. **Local Files**:
+   - User provides directory or ZIP file
+   - Useful for offline environments
+   - For testing with custom data
+
+**Validation & Error Handling:**
+- Verify file checksums after download
+- Test data integrity (try loading sample data)
+- Show clear error messages if validation fails
+- Rollback to previous version if update fails
+- Detailed error logs for troubleshooting
+
+#### Platform-Specific Considerations
+
+**Windows:**
+- Handle long file paths (enable long path support)
+- Use proper temp directory for downloads
+- Antivirus might block downloads → show warning/instructions
+- UAC permissions if writing to protected locations
+
+**Linux:**
+- Check write permissions to ~/.local/share/
+- Support for different desktop environments
+- Handle both X11 and Wayland
+- Provide fallback to ./data/ if home directory unavailable
+
+**macOS:**
+- Handle Gatekeeper restrictions
+- Proper bundle structure for app distribution
+- Request file system permissions if needed
+- Retina/high-DPI display support (handled by egui)
+
+**Fallback Behavior:**
+If automatic download fails:
+```
+❌ Download Failed
+
+Reason: Network timeout / Invalid checksum / etc.
+
+MANUAL INSTALLATION:
+1. Visit: https://github.com/Regisle/TimelessJewelData
+2. Download the following files:
+   • lethal_pride.bin
+   • brutal_restraint.bin
+   • ...
+3. Click "Browse Local Files" and select the folder
+
+[ Retry Download ]  [ Browse Local Files ]  [ Cancel ]
+```
+
+#### Implementation Details
+
+**Download Manager (in API crate):**
+```rust
+pub struct DataDownloader {
+    manifest_url: String,
+    target_dir: PathBuf,
+}
+
+impl DataDownloader {
+    pub async fn download_all(&self) -> Result<(), DownloadError>;
+    pub async fn check_updates(&self) -> Result<Option<Version>, DownloadError>;
+    pub async fn validate_files(&self) -> Result<bool, ValidationError>;
+    pub fn import_from_directory(&self, path: PathBuf) -> Result<(), ImportError>;
+}
+```
+
+**Data Loader (in core crate):**
+```rust
+pub struct DataLoader {
+    data_dir: PathBuf,
+}
+
+impl DataLoader {
+    pub fn data_exists(&self) -> bool;
+    pub fn load_lut_data(&self) -> Result<LutData, LoadError>;
+    pub fn get_data_info(&self) -> Option<DataInfo>;
+}
+```
+
 ---
 
 ## FEATURE REQUIREMENTS
 
 ### Version 1 (MVP)
+
+#### Data Management
+- [ ] Detect missing data on startup
+- [ ] Show "Download Required" dialog on first run
+- [ ] Download LUT data from GitHub with progress bar
+- [ ] Validate downloaded files (checksums)
+- [ ] Store data in OS-specific app data directory
+- [ ] Manual import from local files/directory
+- [ ] Settings panel for data management
+- [ ] "Check for Updates" functionality
+- [ ] "Re-import" button for updating data
 
 #### Item Fetching
 - [ ] Fetch active leagues from API (with caching)
@@ -571,6 +793,8 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
 async-trait = "0.1"
+sha2 = "0.10"  # For checksum validation
+dirs = "5.0"   # For OS-specific data directories
 ```
 
 ### Desktop Crate
@@ -702,11 +926,22 @@ Version 1 is successful when:
 - Created project specification
 - Defined architecture and tech stack
 
-### 2025-11-16 - Requirement Updates
+### 2025-11-16 - Requirement Updates (Iteration 1)
 - **CHANGED:** Analyze ALL socket locations instead of user-selected sockets
 - **CHANGED:** Store and display results per socket location
 - **ADDED:** Searchable mod selector UI with separate selected mods area
 - **ADDED:** Support for filtering/comparing results by socket
+
+### 2025-11-16 - Data Management System (Iteration 2)
+- **ADDED:** Comprehensive data management system for LUT files
+- **ADDED:** In-app download functionality with progress tracking
+- **ADDED:** Cross-platform storage using OS-specific app data directories
+- **ADDED:** Update/re-import functionality for new PoE patches
+- **ADDED:** Multiple import sources (GitHub, custom URL, local files)
+- **ADDED:** Checksum validation (SHA256) for data integrity
+- **ADDED:** Fallback to manual import if auto-download fails
+- **DECISION:** LUT data NOT committed to repository (too large ~200MB)
+- **DECISION:** Support all platforms (Windows, Linux, macOS) with platform-specific handling
 
 ---
 
