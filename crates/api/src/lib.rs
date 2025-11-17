@@ -24,3 +24,4 @@ pub use manifest::{DataFile, DataManifest, DataSource};
 pub use github::GitHubClient;
 pub use update_checker::{UpdateChecker, UpdateInfo};
 pub use parser::{LutData, NodeModifier, PobDataParser};
+pub use downloader::DataDownloader;
