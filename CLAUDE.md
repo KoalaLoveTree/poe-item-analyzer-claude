@@ -971,6 +971,28 @@ Version 1 is successful when:
   - All jewel types successfully parsed
   - Thousands of seeds with modifier data loaded
 
+### 2025-11-18 - Glorious Vanity Support (Phase 3 Enhancement)
+- **FIXED:** Missing Glorious Vanity jewel type (was only showing 4 of 5 jewel types)
+- **IMPLEMENTED:** Glorious Vanity special binary format parser
+  - Multi-part file download (GloriousVanity.zip.part0-part4, ~22MB total)
+  - Automatic part concatenation into single GloriousVanity.zip file
+  - Header section parser (nodeCount × seedRange bytes indicating data lengths)
+  - Variable-length data section parser (stats and rolls format)
+  - Support for 4 valid patterns: 1+1, 1+2, 3+3, 4+4 (stats+rolls)
+- **TECHNICAL DETAILS:**
+  - Glorious Vanity uses completely different format than other 4 jewel types
+  - Header: 1,678 nodes × 7,901 seeds = ~13.2 MB
+  - Data: Variable-length byte arrays with stat IDs and roll values
+  - Format: All stats first, then all rolls (not interleaved)
+  - File split due to GitHub file size limits (5MB per part)
+- **RESEARCH:**
+  - Investigated PathOfBuilding source code (DataLegionLookUpTableHelper.lua)
+  - Analyzed TimelessJewelData repository documentation
+  - Understood seed range behavior: "Seeds with data" shows seeds with ≥1 modified node
+- **RESULT:** All 5 timeless jewel types now fully supported ✅
+  - LethalPride, BrutalRestraint, ElegantHubris, MilitantFaith (simple format)
+  - GloriousVanity (complex header+variable-length format)
+
 ### Status: Phase 3 Complete ✅
 **Next Steps:**
 - Phase 4: Implement actual analysis logic (analyzer trait, scoring system)

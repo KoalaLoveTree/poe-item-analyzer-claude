@@ -13,11 +13,10 @@
 //! # Glorious Vanity Special Case
 //!
 //! Glorious Vanity uses a more complex format with:
-//! - Header section indicating data size per node
-//! - Variable stat replacements for all nodes
-//! - Multiple stats per notable with roll values
-//!
-//! TODO: Implement Glorious Vanity header parsing when needed
+//! - Header section (nodeCount × seedRange bytes) indicating data size per node
+//! - Variable-length data section with stat IDs and roll values
+//! - Format: All stats first, then all rolls (not interleaved)
+//! - Valid patterns: 1+1, 1+2, 3+3, or 4+4 (stats+rolls)
 
 use crate::error::DownloadError;
 use std::collections::HashMap;
@@ -60,8 +59,12 @@ impl ZipParser {
         // Get the seed range for this jewel type
         let seed_range = Self::get_seed_range(jewel_type);
 
-        // Parse the binary LUT data
-        let lookup_table = Self::parse_binary_data(&decompressed_data, seed_range)?;
+        // Parse the binary LUT data based on jewel type
+        let lookup_table = if jewel_type == "GloriousVanity" {
+            Self::parse_glorious_vanity(&decompressed_data, seed_range)?
+        } else {
+            Self::parse_binary_data(&decompressed_data, seed_range)?
+        };
 
         Ok(JewelLutData {
             jewel_type: jewel_type.to_string(),
@@ -169,5 +172,161 @@ impl ZipParser {
         );
 
         Ok(lookup_table)
+    }
+
+    /// Parse Glorious Vanity binary data (special format with header)
+    ///
+    /// Glorious Vanity uses a two-part format:
+    /// 1. Header: nodeCount × seedRange bytes, each indicating data length for that node/seed
+    /// 2. Data: Variable-length byte arrays with stat IDs and roll values
+    ///
+    /// Format: All stats first, then all rolls (not interleaved)
+    /// Valid patterns: 1+1, 1+2, 3+3, or 4+4 (stats+rolls)
+    fn parse_glorious_vanity(
+        buffer: &[u8],
+        seed_range: (u32, u32),
+    ) -> Result<HashMap<u32, HashMap<usize, String>>, DownloadError> {
+        let mut lookup_table: HashMap<u32, HashMap<usize, String>> = HashMap::new();
+
+        if buffer.is_empty() {
+            return Ok(lookup_table);
+        }
+
+        eprintln!(
+            "Parsing Glorious Vanity: {} bytes (seed range: {:?})",
+            buffer.len(),
+            seed_range
+        );
+
+        let min_seed = seed_range.0;
+        let max_seed = seed_range.1;
+        let seed_size = (max_seed - min_seed + 1) as usize;
+
+        // Glorious Vanity has fixed node count (1678 nodes)
+        const GV_NODE_COUNT: usize = 1678;
+
+        // Header size: nodeCount × seedRange
+        let header_size = GV_NODE_COUNT * seed_size;
+
+        if buffer.len() < header_size {
+            return Err(DownloadError::DownloadFailed(format!(
+                "Buffer too small for Glorious Vanity header: {} < {}",
+                buffer.len(),
+                header_size
+            )));
+        }
+
+        // Split buffer into header and data sections
+        let header = &buffer[0..header_size];
+        let data = &buffer[header_size..];
+
+        eprintln!(
+            "Header: {} bytes ({} nodes × {} seeds), Data: {} bytes",
+            header_size,
+            GV_NODE_COUNT,
+            seed_size,
+            data.len()
+        );
+
+        // Parse data section using header as index
+        let mut data_offset = 0;
+
+        for seed_offset in 0..seed_size {
+            let seed = min_seed + seed_offset as u32;
+            let mut node_modifiers: HashMap<usize, String> = HashMap::new();
+
+            for node_index in 0..GV_NODE_COUNT {
+                // Get data length from header
+                let header_index = node_index * seed_size + seed_offset;
+                let data_length = header[header_index] as usize;
+
+                if data_length > 0 {
+                    // Extract the data bytes for this node/seed
+                    if data_offset + data_length > data.len() {
+                        eprintln!(
+                            "Warning: Data offset {} + length {} exceeds buffer size {}",
+                            data_offset,
+                            data_length,
+                            data.len()
+                        );
+                        break;
+                    }
+
+                    let node_data = &data[data_offset..data_offset + data_length];
+
+                    // Parse the variable-length data
+                    // Format: [stat1, stat2, ...] [roll1, roll2, ...]
+                    // Valid patterns: 1+1, 1+2, 3+3, or 4+4
+                    let modifier_str = Self::parse_gv_node_data(node_data, data_length);
+
+                    if !modifier_str.is_empty() {
+                        node_modifiers.insert(node_index, modifier_str);
+                    }
+
+                    data_offset += data_length;
+                }
+            }
+
+            // Only store seeds that have modifiers
+            if !node_modifiers.is_empty() {
+                lookup_table.insert(seed, node_modifiers);
+            }
+        }
+
+        eprintln!(
+            "Parsed {} Glorious Vanity seeds with data",
+            lookup_table.len()
+        );
+
+        Ok(lookup_table)
+    }
+
+    /// Parse Glorious Vanity node data (variable-length byte array)
+    ///
+    /// Returns a string representation of the stats and rolls
+    fn parse_gv_node_data(data: &[u8], length: usize) -> String {
+        if length == 0 {
+            return String::new();
+        }
+
+        // Determine pattern based on length
+        // 1+1 = 2 bytes, 1+2 = 3 bytes, 3+3 = 6 bytes, 4+4 = 8 bytes
+        let (num_stats, num_rolls) = match length {
+            2 => (1, 1),
+            3 => (1, 2),
+            6 => (3, 3),
+            8 => (4, 4),
+            _ => {
+                eprintln!("Warning: Unexpected GV data length: {}", length);
+                // Try to infer from length (assume equal stats and rolls)
+                if length % 2 == 0 {
+                    let half = length / 2;
+                    (half, half)
+                } else {
+                    // Odd length, might be 1 stat with multiple rolls
+                    (1, length - 1)
+                }
+            }
+        };
+
+        // Extract stats and rolls
+        let mut parts = Vec::new();
+
+        // Stats come first
+        for i in 0..num_stats {
+            if i < data.len() {
+                parts.push(format!("s{}", data[i]));
+            }
+        }
+
+        // Rolls come after stats
+        for i in 0..num_rolls {
+            let idx = num_stats + i;
+            if idx < data.len() {
+                parts.push(format!("r{}", data[idx]));
+            }
+        }
+
+        parts.join("|")
     }
 }

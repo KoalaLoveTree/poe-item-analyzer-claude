@@ -69,7 +69,8 @@ This is a Cargo workspace with three crates:
 - [x] Automatic download system
 - [x] Parser testing UI with progress bars
 - [x] Auto-detection of existing data
-- [x] Support for all jewel types (LethalPride, BrutalRestraint, ElegantHubris, MilitantFaith)
+- [x] Support for all 5 jewel types (LethalPride, BrutalRestraint, ElegantHubris, MilitantFaith, GloriousVanity)
+- [x] Special parser for GloriousVanity variable-length format
 
 **Phase 4: Analysis Logic** 🚧 Next Up
 - [ ] Timeless jewel analyzer implementation
@@ -92,7 +93,7 @@ This is a Cargo workspace with three crates:
 - Display parsed data:
   - ~4000+ node indices
   - ~200+ modifiers
-  - 4 jewel types
+  - 5 jewel types (including special GloriousVanity format)
   - Thousands of seeds per type
 - Auto-detect and reuse existing data
 - Real-time progress tracking

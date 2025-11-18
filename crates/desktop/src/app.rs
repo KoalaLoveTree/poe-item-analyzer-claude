@@ -30,6 +30,11 @@ async fn download_with_progress(
         "BrutalRestraint.zip",
         "ElegantHubris.zip",
         "MilitantFaith.zip",
+        "GloriousVanity.zip.part0",
+        "GloriousVanity.zip.part1",
+        "GloriousVanity.zip.part2",
+        "GloriousVanity.zip.part3",
+        "GloriousVanity.zip.part4",
     ];
 
     let total = files.len();
@@ -103,6 +108,32 @@ async fn download_with_progress(
     }
 
     eprintln!("DEBUG: All downloads complete!");
+
+    // Concatenate GloriousVanity parts into single file
+    eprintln!("DEBUG: Concatenating GloriousVanity parts...");
+    let part_files = vec![
+        "GloriousVanity.zip.part0",
+        "GloriousVanity.zip.part1",
+        "GloriousVanity.zip.part2",
+        "GloriousVanity.zip.part3",
+        "GloriousVanity.zip.part4",
+    ];
+
+    let mut glorious_vanity_data = Vec::new();
+    for part in &part_files {
+        let part_path = temp_dir.join(part);
+        let part_data = std::fs::read(&part_path)
+            .map_err(|e| format!("Failed to read {}: {}", part, e))?;
+        glorious_vanity_data.extend_from_slice(&part_data);
+        eprintln!("DEBUG: Added {} bytes from {}", part_data.len(), part);
+    }
+
+    let glorious_vanity_path = temp_dir.join("GloriousVanity.zip");
+    std::fs::write(&glorious_vanity_path, &glorious_vanity_data)
+        .map_err(|e| format!("Failed to write GloriousVanity.zip: {}", e))?;
+
+    eprintln!("DEBUG: Created GloriousVanity.zip ({} bytes)", glorious_vanity_data.len());
+
     Ok(temp_dir)
 }
 
